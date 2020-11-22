@@ -17,14 +17,14 @@ public class App {
 		System.out.println("Enter player name: ");
 		
 		String wantedPlayer = userInput.nextLine();
-		System.out.println(wantedPlayer);
+		
+		System.out.println("Getting three point average for every season for player: " + wantedPlayer);
 		
 
 		try {
 			Document doc = Jsoup.connect(baseUrl).get();
 			
-			
-			
+			Boolean playerFound = false;
 			// Elements playerPage = doc.getElementsByAttribute("data-append-csv");
 			
 			for (Element player: doc.getElementsByAttribute("data-append-csv")) {
@@ -40,10 +40,29 @@ public class App {
 					
 					String playerUrl = "https://www.basketball-reference.com" + url;
 					
+					playerFound = true;
+					
 					Document playerPage = Jsoup.connect(playerUrl).get();
-					System.out.println(playerPage.outerHtml());
-				}
+					// System.out.println(playerPage.outerHtml());
+					
+					for (Element page: playerPage.select("table#per_game tr")) {
+						String season = page.select("th.left").text();
+						
+						
+						if (!season.equals("Career")) {
+							String threePa = page.select("td[data-stat=fg3a_per_g]").text();
+							System.out.println(season + " " + threePa);
+						}
+						
+					}
+				} 
 			}
+			
+			if (playerFound.equals(false)) {
+				System.out.println("No player with name " + wantedPlayer + " found");
+			}
+			
+			
 			
 			
 			 //System.out.printf("Title: %s\n", doc.title());
