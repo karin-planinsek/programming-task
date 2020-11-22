@@ -1,4 +1,5 @@
 import java.io.IOException;
+import java.lang.reflect.Array;
 import java.util.Scanner;
 
 import org.jsoup.Jsoup;
@@ -15,16 +16,43 @@ public class App {
 		Scanner userInput = new Scanner(System.in);
 		System.out.println("Enter player name: ");
 		
-		String playerName = userInput.nextLine();
-		// System.out.println(playerName);
+		String wantedPlayer = userInput.nextLine();
+		System.out.println(wantedPlayer);
+		
+
 		try {
 			Document doc = Jsoup.connect(baseUrl).get();
 			
-			Elements playerPage = doc.getElementsByAttribute("data-append-csv");
 			
-			// System.out.printf("Title: %s\n", doc.title());
+			
+			// Elements playerPage = doc.getElementsByAttribute("data-append-csv");
+			
+			for (Element player: doc.getElementsByAttribute("data-append-csv")) {
+				// String playerName = player.text();
+				// System.out.println(playerName);
+				
+				String playerName = player.text();
+				// System.out.println(playerName);
+				
+				
+				if (wantedPlayer.equals(playerName)) {
+					String url = player.select("a").attr("href");
+					
+					String playerUrl = "https://www.basketball-reference.com" + url;
+					
+					Document playerPage = Jsoup.connect(playerUrl).get();
+					System.out.println(playerPage.outerHtml());
+				}
+			}
+			
+			
+			 //System.out.printf("Title: %s\n", doc.title());
 			// System.out.println(doc.outerHtml());
-			// System.out.println(playerPage);
+			
+			
+			
+			
+			
 		} catch (IOException event) {
 			event.printStackTrace();
 		}
