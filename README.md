@@ -1,2 +1,2 @@
 # programming-task
-This repository contains command line program for Lit-Transit
+This repository contains a Java command line program
